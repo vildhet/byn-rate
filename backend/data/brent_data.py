@@ -17,5 +17,5 @@ class BrentData(DailyData):
         for d in api_data['data']:
             row = (d[date_index], d[value_index])
             self.data.append(row)
-
+        
         

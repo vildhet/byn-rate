@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
-from flask import Flask, send_file
+from flask import Flask
 
 app = Flask(__name__, static_url_path='', static_folder='www')
 

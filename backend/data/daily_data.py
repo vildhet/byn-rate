@@ -6,3 +6,9 @@ class DailyData:
 
     def update(self):
         pass
+
+    def db_write(self):
+        pass
+
+    def db_read(self):
+        pass

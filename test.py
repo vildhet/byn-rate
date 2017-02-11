@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from data import BrentData
+from backend.data import BrentData
 
 
 
