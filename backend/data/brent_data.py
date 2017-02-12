@@ -7,6 +7,10 @@ class BrentData(DailyData):
     def __init__(self):
         super().__init__()
 
+    @property
+    def data_type(self):
+        return 'brent'
+
     def update(self):
         api_data = requests.get(API_LINK).json()
 
@@ -15,7 +19,11 @@ class BrentData(DailyData):
 
         self.data = []
         for d in api_data['data']:
-            row = (d[date_index], d[value_index])
+            row = {
+                'date': d[date_index],
+                'value': d[value_index],
+                'type': self.data_type
+            }
             self.data.append(row)
         
         

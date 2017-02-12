@@ -5,4 +5,5 @@ from backend.data import BrentData
 
 
 data = BrentData()
-data.update()
+data.db_read()
+print(data.data)

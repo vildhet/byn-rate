@@ -7,4 +7,4 @@ def init_application():
     if not os.path.exists(config.storage):
         os.makedirs(config.storage)
 
-init_application()
+# init_application()
