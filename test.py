@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
-from backend.data import BrentData
+from backend import data
 
 
-
-data = BrentData()
-data.db_read()
-print(data.data)
+print(data.brent.entries)

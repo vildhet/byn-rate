@@ -17,13 +17,14 @@ class BrentData(DailyData):
         date_index = api_data['column_names'].index('Date')
         value_index = api_data['column_names'].index('Settle')
 
-        self.data = []
+        entries = []
         for d in api_data['data']:
             row = {
                 'date': d[date_index],
                 'value': d[value_index],
                 'type': self.data_type
             }
-            self.data.append(row)
+            entries.append(row)
+        self.set_entries(entries)
         
         
