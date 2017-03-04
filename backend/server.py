@@ -18,7 +18,6 @@ def get_data(name):
         return jsonify(collection.entries)
     else:
         abort(404)
-    
 
 def run():
     app.run()
