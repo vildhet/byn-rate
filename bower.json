@@ -14,6 +14,8 @@
     "tests"
   ],
   "dependencies": {
-    "chartjs": "*"
+    "d3": "*",
+    "nvd3": "*",
+    "jquery": "*"
   }
 }

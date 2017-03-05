@@ -2,5 +2,5 @@
 
 from backend import data
 
-
-print(data.brent.entries)
+data.eurrub.update()
+print(data.eurrub.get())

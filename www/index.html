@@ -3,12 +3,17 @@
   <head>
     <title>Project 1</title>
     <meta charset="utf-8">
-    <script src="components/vue/dist/vue.js"></script>
+    <link href="components/nvd3/build/nv.d3.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <script src="components/d3/d3.js"></script>
+    <script src="components/nvd3/build/nv.d3.js"></script>
+    <script src="components/jquery/dist/jquery.js"></script>
+    <script src="js/app.js"></script>
   </head>
   <body>
-    <div id="app">
-      <p>{{ message }}</p>
+    <div id="chart">
+      <svg></svg>
     </div>
   </body>
-  <script src="js/app.js"></script>
 </html>
