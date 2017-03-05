@@ -1,0 +1,16 @@
+{
+  "name": "project1",
+  "version": "0.0.1",
+  "dependencies": {
+    "d3": "^3.4.4",
+    "jquery": "^3.1.1",
+    "nvd3": "^1.8.5"
+  },
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.1.0"
+  },
+  "scripts": {
+    "build": "browserify -t babelify js/app.js -o js/bundle.js"
+  }
+}
