@@ -6,7 +6,7 @@ function drawCharts(values) {
     var data = [
         {
             values: values,
-            key: 'Brent'
+            key: 'Eur/Rub'
         }
     ];
 
