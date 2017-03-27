@@ -48,7 +48,7 @@ class NbrbData(DailyData):
 
     def fetch_data(self, start, end):
         days = (end - start).days
-        assert days <= YEAR_DAYS, 'Too many days requested: %s' % days
+        assert days <= YEAR_DAYS, 'Invalid range: %s days' % days
 
         url = API_DATA_URL + str(self.cur_id)
         params = {
@@ -75,10 +75,16 @@ class NbrbData(DailyData):
         return entries
 
     def fetch_range(self, start, end):
+        for d in [DENOMINATION_2000, DENOMINATION_2016]:
+            if start < d and d <= end:
+                r1 = self.fetch_range(start, d - timedelta(days=1))
+                r2 = self.fetch_range(d, end)
+                return r1 + r2
+
         year = timedelta(days=YEAR_DAYS)
         data_collection = []
 
-        while start < end:
+        while start <= end:
             if start + year < end:
                 current_end = start + year
             else:

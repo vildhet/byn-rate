@@ -5,10 +5,10 @@ const async = require('async');
 
 window.onload = function() {
     async.parallel([
-        next => $.get('data/brent', data => {
+        next => $.get('data/bynusd', data => {
             next(null, {
                 values: data,
-                key: 'Brent',
+                key: 'Bynusd',
                 color: '#ff7f0e'
             });
         }),
