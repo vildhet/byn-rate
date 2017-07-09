@@ -1,5 +1,7 @@
 from datetime import datetime
 import time
+
+from .. import utils
 from ..db import db
 
 def to_web_format(entry):
@@ -18,17 +20,29 @@ class DailyData:
             'type': self.data_type
         }
 
-    def get(self):
-        entries = []
+    def get_web(self):
         cursor = db.daily.find(self.key, {
             '_id': 0,
             'date': 1,
             'value': 1
         }).sort('date', 1)
+        return [to_web_format(row) for row in cursor]
 
-        for row in cursor:
-            entries.append(to_web_format(row))
-        return entries
+    def get_all(self):
+        cursor = db.daily.find(self.key)
+        return [row for row in cursor]
+
+    def get_latest(self):
+        return db.daily.find_one(self.key, sort=[('date', -1)])
+
+    def get_by_date(self, date):
+        dt = datetime.strptime(date, '%Y-%m-%d')
+        ts = utils.utc_timestamp(dt)
+
+        return db.daily.find_one({
+            'type': self.data_type,
+            'date': ts
+        })
 
     def fetch(self):
         pass

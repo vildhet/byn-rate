@@ -2,7 +2,9 @@ import requests
 import time
 from datetime import datetime, timedelta
 
+from .. import utils
 from .daily_data import DailyData
+
 
 API_INFO_URL = 'http://www.nbrb.by/API/ExRates/Currencies/'
 API_DATA_URL = 'http://www.nbrb.by/API/ExRates/Rates/Dynamics/'
@@ -61,13 +63,12 @@ class NbrbData(DailyData):
         entries = []
         for d in data:
             dt = datetime.strptime(d['Date'], DATE_FULL_FORMAT)
-            timestamp = int(time.mktime(dt.timetuple()))
 
             rate = self.denominate(d['Cur_OfficialRate'], dt)
             assert rate < 3, 'Exchange rate on {} is {}'.format(dt, rate)
 
             row = {
-                'date': timestamp,
+                'date': utils.utc_timestamp(dt),
                 'value': rate,
                 'type': self.data_type
             }

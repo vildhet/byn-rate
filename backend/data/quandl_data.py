@@ -1,7 +1,7 @@
 import requests
-import time
 from datetime import datetime
 
+from .. import utils
 from .daily_data import DailyData
 
 
@@ -24,9 +24,9 @@ class QuandlData(DailyData):
         entries = []
         for d in api_data['data']:
             dt = datetime.strptime(d[date_index], '%Y-%m-%d')
-            timestamp = int(time.mktime(dt.timetuple()))
+
             row = {
-                'date': timestamp,
+                'date': utils.utc_timestamp(dt),
                 'value': d[value_index],
                 'type': self.data_type
             }

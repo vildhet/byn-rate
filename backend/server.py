@@ -17,7 +17,7 @@ def index():
 def get_data(name):
     collection = data.get_by_name(name)
     if collection:
-        return jsonify(collection.get())
+        return jsonify(collection.get_web())
     else:
         abort(404)
 
