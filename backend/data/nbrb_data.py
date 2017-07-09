@@ -18,28 +18,24 @@ YEAR_DAYS = 365
 DENOMINATION_2016 = datetime(2016, 7, 1)
 DENOMINATION_2000 = datetime(2000, 1, 1)
 
-def info_request(func):
-    def wrapper(self, *args, **kwargs):
-        if not self.info:
-            self.update_info()
-        return func(self, *args, **kwargs)
-    return wrapper
-
 
 class NbrbData(DailyData):
-    def __init__(self, data_type, cur_id):
+    def __init__(self, data_type, currency):
         super().__init__(data_type)
-        self.cur_id = cur_id
-        self.info = None
+        self.currency = currency
 
-    def update_info(self):
-        url = API_INFO_URL + str(self.cur_id)
-        self.info = requests.get(url).json()
+    def get_ranges(self):
+        def parse(info):
+            start_date = datetime.strptime(info['Cur_DateStart'], DATE_FULL_FORMAT)
+            end_date = datetime.strptime(info['Cur_DateEnd'], DATE_FULL_FORMAT)
 
-    @info_request
-    def get_start_date(self):
-        date = self.info['Cur_DateStart']
-        return datetime.strptime(date, DATE_FULL_FORMAT)
+            if end_date > datetime.today():
+                end_date = datetime.today()
+
+            return info['Cur_ID'], start_date, end_date
+
+        info = requests.get(API_INFO_URL).json()
+        return [parse(i) for i in info if i['Cur_Abbreviation'] == self.currency]
 
     def denominate(self, rate, date):
         if date < DENOMINATION_2000:
@@ -48,11 +44,11 @@ class NbrbData(DailyData):
             return rate / 10000
         return rate
 
-    def fetch_data(self, start, end):
+    def fetch_data(self, cur_id, start, end):
         days = (end - start).days
         assert days <= YEAR_DAYS, 'Invalid range: %s days' % days
 
-        url = API_DATA_URL + str(self.cur_id)
+        url = API_DATA_URL + str(cur_id)
         params = {
             'startDate': start.strftime(DATE_FORMAT),
             'endDate': end.strftime(DATE_FORMAT)
@@ -75,11 +71,11 @@ class NbrbData(DailyData):
             entries.append(row)
         return entries
 
-    def fetch_range(self, start, end):
+    def fetch_range(self, cur_id, start, end):
         for d in [DENOMINATION_2000, DENOMINATION_2016]:
             if start < d and d <= end:
-                r1 = self.fetch_range(start, d - timedelta(days=1))
-                r2 = self.fetch_range(d, end)
+                r1 = self.fetch_range(cur_id, start, d - timedelta(days=1))
+                r2 = self.fetch_range(cur_id, d, end)
                 return r1 + r2
 
         year = timedelta(days=YEAR_DAYS)
@@ -91,14 +87,17 @@ class NbrbData(DailyData):
             else:
                 current_end = end
 
-            d = self.fetch_data(start, current_end)
+            d = self.fetch_data(cur_id, start, current_end)
             data_collection += d
 
             start = current_end + timedelta(days=1)
         return data_collection
 
     def fetch(self):
-        start = self.get_start_date()
-        today = datetime.today()
+        ranges = self.get_ranges()
+        entries = []
+
+        for r in ranges:
+            entries += self.fetch_range(*r)
         
-        return self.fetch_range(start, today)
+        return entries
