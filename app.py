@@ -4,13 +4,13 @@ import argparse
 
 
 def run_server():
-    from backend import server
+    from web import server
     server.run()
 
 
 def update_data():
-    from backend import data
-    all_data = data.get_all()
+    from data import daily
+    all_data = daily.get_all()
     for d in all_data:
         print('Updating %s...' % d.data_type)
         d.update()

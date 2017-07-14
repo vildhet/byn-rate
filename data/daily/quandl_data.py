@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 
-from .. import utils
+import utils
 from .daily_data import DailyData
 
 

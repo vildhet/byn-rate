@@ -1,7 +1,7 @@
 from datetime import datetime
 import time
 
-from .. import utils
+import utils
 from ..db import db
 
 def to_web_format(entry):
@@ -39,15 +39,17 @@ class DailyData:
         dt = datetime.strptime(date, '%Y-%m-%d')
         ts = utils.utc_timestamp(dt)
 
-        return db.daily.find_one({
+        row = db.daily.find_one({
             'type': self.data_type,
             'date': ts
         })
+
+        return row['value'] if row else None
 
     def fetch(self):
         pass
 
     def update(self):
-        db.daily.remove(self.key)
         entries = self.fetch()
+        db.daily.remove(self.key)
         db.daily.insert_many(entries)

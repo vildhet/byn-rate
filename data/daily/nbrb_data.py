@@ -2,7 +2,7 @@ import requests
 import time
 from datetime import datetime, timedelta
 
-from .. import utils
+import utils
 from .daily_data import DailyData
 
 
