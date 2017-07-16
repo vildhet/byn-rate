@@ -23,17 +23,22 @@ class DailyData:
         cursor = db.daily.find(self._key, self._filter).sort('date', pymongo.ASCENDING)
         yield from cursor
 
-    def yield_latest(self, n):
-        cursor = db.daily.find(self._key, self._filter).sort('date', pymongo.DESCENDING).limit(n)
-        yield from cursor
+    def yield_latest(self, days, to_date=None):
+        if not to_date:
+            dt = datetime.today()
+            to_date = dt.strftime('%Y-%m-%d')
 
-    def get_by_date(self, date):
-        row = db.daily.find_one({
+        key = {
             'type': self.data_type,
-            'date': date
-        })
+            'date': {
+                '$lte': to_date
+            }
+        }
+        cursor = db.daily.find(key, self._filter) \
+            .sort('date', pymongo.DESCENDING) \
+            .limit(days)
 
-        return row['value'] if row else None
+        yield from cursor
 
     def fetch(self):
         pass

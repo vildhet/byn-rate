@@ -6,20 +6,22 @@ import time
 import json
 from tabulate import tabulate
 
-from data import daily as data
+from data import daily
+from data.daily import BatchAccessor
 from predict import dumb_model
 
 def print_table():
-    dates = ['2017-07-07', '2017-07-08', '2017-07-09', '2017-07-10']
-    daily_info = [data.get_by_date(d) for d in dates]
+    accessor = BatchAccessor(daily.get_all())
+    info = accessor.get_latest(5, '2017-07-10')
+    info = list(reversed(info))
 
-    names = sorted(list(daily_info[0].keys()))
+    names = sorted([k for k in info[0].keys() if k != 'date'])
 
-    headers = ['Name'] + dates
+    headers = ['Name'] + [i['date'] for i in info]
     rows = []
 
     for name in names:
-        row = [name] + [str(info[name]) for info in daily_info]
+        row = [name] + [str(i[name]) for i in info]
         rows.append(row)
 
     t = tabulate(rows, headers=headers, tablefmt='orgtbl')

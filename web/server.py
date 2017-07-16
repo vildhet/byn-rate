@@ -16,7 +16,7 @@ def index():
 
 @app.route('/data/<name>')
 def get_data(name):
-    collection = daily.get_by_name(name)
+    collection = daily.get(name)
     if collection:
         accessor = WebAccessor(collection)
         return jsonify(accessor.get_all())
