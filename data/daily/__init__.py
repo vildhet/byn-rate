@@ -2,6 +2,8 @@ from .quandl_data import QuandlData
 from .nbrb_data import NbrbData
 from .daily_data import DailyData
 
+from .accessors import WebAccessor, BatchAccessor
+
 brent = QuandlData('brent', 'CHRIS/ICE_B1', 'Settle')
 eurrub = QuandlData('eurrub', 'ECB/EURRUB', 'Value')
 bynusd = NbrbData('bynusd', 'USD')

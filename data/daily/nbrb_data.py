@@ -2,7 +2,6 @@ import requests
 import time
 from datetime import datetime, timedelta
 
-import utils
 from .daily_data import DailyData
 
 
@@ -28,9 +27,6 @@ class NbrbData(DailyData):
         def parse(info):
             start_date = datetime.strptime(info['Cur_DateStart'], DATE_FULL_FORMAT)
             end_date = datetime.strptime(info['Cur_DateEnd'], DATE_FULL_FORMAT)
-
-            if end_date > datetime.today():
-                end_date = datetime.today()
 
             return info['Cur_ID'], start_date, end_date
 
@@ -63,8 +59,11 @@ class NbrbData(DailyData):
             rate = self.denominate(d['Cur_OfficialRate'], dt)
             assert rate < 3, 'Exchange rate on {} is {}'.format(dt, rate)
 
+            # We are interested in trading results, not in the official rate on the next day
+            dt -= timedelta(days=1)
+
             row = {
-                'date': utils.utc_timestamp(dt),
+                'date': dt.strftime(DATE_FORMAT),
                 'value': rate,
                 'type': self.data_type
             }

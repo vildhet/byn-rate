@@ -3,6 +3,7 @@ from os.path import dirname, abspath, join
 from flask import Flask, jsonify, abort
 
 from data import daily
+from data.daily import WebAccessor
 
 www_path = join(dirname(abspath(sys.modules['__main__'].__file__)), 'www')
 app = Flask(__name__, static_url_path='', static_folder=www_path)
@@ -17,7 +18,8 @@ def index():
 def get_data(name):
     collection = daily.get_by_name(name)
     if collection:
-        return jsonify(collection.get_web())
+        accessor = WebAccessor(collection)
+        return jsonify(accessor.get_all())
     else:
         abort(404)
 

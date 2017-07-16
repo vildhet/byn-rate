@@ -1,7 +1,6 @@
 import requests
 from datetime import datetime
 
-import utils
 from .daily_data import DailyData
 
 
@@ -16,17 +15,18 @@ class QuandlData(DailyData):
 
     def fetch(self):
         link = API_LINK + self.code + '.json'
-        api_data = requests.get(link).json()
+        params = {
+            'api_key': '7CJj7Ta3hx_KtdBZpnxR'
+        }
+        api_data = requests.get(link, params=params).json()
 
         date_index = api_data['column_names'].index('Date')
         value_index = api_data['column_names'].index(self.value_column)
 
         entries = []
         for d in api_data['data']:
-            dt = datetime.strptime(d[date_index], '%Y-%m-%d')
-
             row = {
-                'date': utils.utc_timestamp(dt),
+                'date': d[date_index],
                 'value': d[value_index],
                 'type': self.data_type
             }
