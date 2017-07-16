@@ -13,7 +13,7 @@ from predict import dumb_model
 def print_table():
     accessor = BatchAccessor(daily.get_all())
     info = accessor.get_latest(5, '2017-07-10')
-    info = list(reversed(info))
+    info = list(info)
 
     names = sorted([k for k in info[0].keys() if k != 'date'])
 
@@ -31,4 +31,4 @@ def print_table():
 
 # data.brent.fill_gaps()
 # print_table()
-dumb_model.get_training_data()
+dumb_model.test()

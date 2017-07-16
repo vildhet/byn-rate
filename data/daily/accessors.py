@@ -43,7 +43,16 @@ class BatchAccessor:
             yield batch
 
     def get_latest(self, days, to_date=None):
-        return [e for e in self.yield_latest(days, to_date)]
+        l = [e for e in self.yield_latest(days, to_date)]
+        return list(reversed(l))
+
+    def get_previous(self, date):
+        dt = datetime.strptime(date, DATE_FORMAT)
+        if dt.weekday() < 5:
+            return self.get_latest(2, date)[0]
+        else:
+            # Date is a weekend
+            return self.get_latest(1, date)[0]
 
 
 class WorkdayAccessor(BatchAccessor):
