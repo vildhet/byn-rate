@@ -60,8 +60,8 @@ class WorkdayAccessor(BatchAccessor):
         super().__init__(collections)
 
     def yield_latest(self, days, to_date):
-        full_weeks = days // 7
-        rest = days % 7
+        full_weeks = days // 5
+        rest = days % 5
 
         total_days = full_weeks * 7
 
